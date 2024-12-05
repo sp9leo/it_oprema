@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-12 08:22:11.482947",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "start",
+  "end",
+  "title",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "start",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "end",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "links": [],
+ "modified": "2024-01-12 08:35:38.786085",
+ "modified_by": "Administrator",
+ "module": "IT_Oprema",
+ "name": "Dogodki",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

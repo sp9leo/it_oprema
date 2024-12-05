@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-17 14:49:34.055681",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pckonfig_name",
+  "pckonfig_devices"
+ ],
+ "fields": [
+  {
+   "fieldname": "pckonfig_name",
+   "fieldtype": "Link",
+   "label": "name",
+   "options": "Computer",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "pckonfig_devices",
+   "fieldtype": "Table",
+   "label": "Devices",
+   "options": "Computer device item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Computer",
+   "link_fieldname": "link_gcpt"
+  }
+ ],
+ "modified": "2024-05-22 08:07:33.936968",
+ "modified_by": "Administrator",
+ "module": "IT_Oprema",
+ "name": "Pc_Konfiguracija",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
