@@ -9,8 +9,9 @@
  "engine": "InnoDB",
  "field_order": [
   "device_link",
-  "column_break_fhhn",
   "device_info_html",
+  "column_break_fhhn",
+  "device_ips_html",
   "section_break_dmvh",
   "attached_devices_html",
   "section_break_yecv",
@@ -212,6 +213,11 @@
   {
    "fieldname": "section_break_dmvh",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "device_ips_html",
+   "fieldtype": "HTML",
+   "label": "ips"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -225,7 +231,7 @@
    "link_fieldname": "computer_link"
   }
  ],
- "modified": "2025-12-15 08:08:32.622182",
+ "modified": "2025-12-16 08:37:54.882547",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Computer",

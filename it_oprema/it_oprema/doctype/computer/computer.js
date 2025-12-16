@@ -38,7 +38,7 @@ frappe.ui.form.on('Computer', {
                             <tr>
                                 <td><a href="/app/device/${item.device_link}">${item.device_link || ''}</a></td>
                                 <td>${item.status || ''}</td>
-                                <td>${item.attached_on || ''}</td>
+                                <td>${item.attached_on ? moment(item.attached_on).format("YYYY-MM-DD HH:mm:ss") : ''}</td> 
                                 <td>${item.notes || ''}</td>
                                 <td>
                                     <button class="btn btn-xs btn-danger detach-btn" data-device="${item.device_link}">
@@ -294,7 +294,7 @@ frappe.ui.form.on('Computer', {
                                     });
 
                                     ip_html += `</tbody></table>`;
-                                    frm.fields_dict.device_info_html.$wrapper.append(ip_html);
+                                    frm.fields_dict.device_ips_html.$wrapper.append(ip_html);
                                 }
                             });
                         }

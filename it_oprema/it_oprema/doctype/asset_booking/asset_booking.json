@@ -9,8 +9,11 @@
   "booking_user",
   "booking_start",
   "booking_end",
+  "amended_from",
   "booking_status",
+  "column_break_gttz",
   "booking_note",
+  "section_break_ssvj",
   "booking_signature"
  ],
  "fields": [
@@ -19,7 +22,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Asset",
-   "options": "Device"
+   "options": "Device",
+   "search_index": 1
   },
   {
    "fieldname": "booking_user",
@@ -42,12 +46,6 @@
    "label": "To"
   },
   {
-   "fieldname": "booking_status",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Status"
-  },
-  {
    "fieldname": "booking_signature",
    "fieldtype": "Signature",
    "label": "Signature"
@@ -56,12 +54,29 @@
    "fieldname": "booking_note",
    "fieldtype": "Small Text",
    "label": "Note"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Data",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_gttz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ssvj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "booking_status",
+   "fieldtype": "Data"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-10 13:49:06.987142",
+ "modified": "2025-12-16 09:52:46.274478",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Asset Booking",
@@ -98,8 +113,9 @@
    "title": "Active"
   },
   {
-   "color": "Gray",
+   "color": "Purple",
    "title": "Returned"
   }
- ]
+ ],
+ "title_field": "booking_asset"
 }

@@ -30,7 +30,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-15 11:06:49.238955",
+ "modified": "2025-12-16 08:47:26.374948",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "IP Address",
@@ -56,5 +56,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "ip_address"
+ "title_field": "ip_address",
+ "track_changes": 1
 }

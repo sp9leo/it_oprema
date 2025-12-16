@@ -1,75 +1,75 @@
 // Copyright (c) 2023, osaz and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Device', {
-    refresh: function(frm) {
-        // Detach button (already working)
-        frm.add_custom_button('Detach from Computer', () => {
-            if (frm.doc.computer_link) {
-                frappe.confirm(
-                    `Detach ${frm.doc.name} from Computer ${frm.doc.computer_link}?`,
-                    () => {
-                        let computer = frm.doc.computer_link;
-                        let device = frm.doc.name;
+// frappe.ui.form.on('Device', {
+//     refresh: function(frm) {
+//         // Detach button (already working)
+//         // frm.add_custom_button('Detach from Computer', () => {
+//         //     if (frm.doc.computer_link) {
+//         //         frappe.confirm(
+//         //             `Detach ${frm.doc.name} from Computer ${frm.doc.computer_link}?`,
+//         //             () => {
+//         //                 let computer = frm.doc.computer_link;
+//         //                 let device = frm.doc.name;
 
-                        frm.set_value('computer_link', null);
-                        frm.save();
+//         //                 frm.set_value('computer_link', null);
+//         //                 frm.save();
 
-                        frappe.call({
-                            method: "it_oprema.it_oprema.api.detach_device",
-                            args: {
-                                computer_link: computer,
-                                device_link: device
-                            },
-                            callback: function() {
-                                frappe.msgprint(`Device ${device} detached successfully`);
-                                frm.reload_doc();
-                            }
-                        });
-                    }
-                );
-            } else {
-                frappe.msgprint('This device is not linked to any Computer');
-            }
-        });
+//         //                 frappe.call({
+//         //                     method: "it_oprema.it_oprema.api.detach_device",
+//         //                     args: {
+//         //                         computer_link: computer,
+//         //                         device_link: device
+//         //                     },
+//         //                     callback: function() {
+//         //                         frappe.msgprint(`Device ${device} detached successfully`);
+//         //                         frm.reload_doc();
+//         //                     }
+//         //                 });
+//         //             }
+//         //         );
+//         //     } else {
+//         //         frappe.msgprint('This device is not linked to any Computer');
+//         //     }
+//         // });
 
-        // Attach button
-        frm.add_custom_button('Attach to Computer', () => {
-            frappe.prompt([
-                {
-                    fieldname: 'computer_link',
-                    label: 'Select Computer',
-                    fieldtype: 'Link',
-                    options: 'Computer',
-                    reqd: 1
-                }
-            ],
-            (values) => {
-                let computer = values.computer_link;
-                let device = frm.doc.name;
+//         // Attach button
+//         // frm.add_custom_button('Attach to Computer', () => {
+//         //     frappe.prompt([
+//         //         {
+//         //             fieldname: 'computer_link',
+//         //             label: 'Select Computer',
+//         //             fieldtype: 'Link',
+//         //             options: 'Computer',
+//         //             reqd: 1
+//         //         }
+//         //     ],
+//         //     (values) => {
+//         //         let computer = values.computer_link;
+//         //         let device = frm.doc.name;
 
-                // Update Device record
-                frm.set_value('computer_link', computer);
-                frm.save();
+//         //         // Update Device record
+//         //         frm.set_value('computer_link', computer);
+//         //         frm.save();
 
-                // Call backend to create the link record
-                frappe.call({
-                    method: "it_oprema.it_oprema.api.attach_device",
-                    args: {
-                        computer_link: computer,
-                        device_link: device
-                    },
-                    callback: function() {
-                        frappe.msgprint(`Device ${device} attached to Computer ${computer}`);
-                        frm.reload_doc();
-                    }
-                });
-            },
-            'Attach Device',
-            'Attach');
-        });
-    }
-});
+//         //         // Call backend to create the link record
+//         //         frappe.call({
+//         //             method: "it_oprema.it_oprema.api.attach_device",
+//         //             args: {
+//         //                 computer_link: computer,
+//         //                 device_link: device
+//         //             },
+//         //             callback: function() {
+//         //                 frappe.msgprint(`Device ${device} attached to Computer ${computer}`);
+//         //                 frm.reload_doc();
+//         //             }
+//         //         });
+//         //     },
+//         //     'Attach Device',
+//         //     'Attach');
+//         // });
+//     }
+// });
 
 
 //asset movements
@@ -199,58 +199,58 @@ frappe.ui.form.on('Device', {
     }
 });
 
-frappe.ui.form.on('Device', {
-    refresh: function(frm) {
-        frm.add_custom_button('Attach to Computer', () => {
-            frappe.prompt([
-                {
-                    fieldname: 'computer_link',
-                    label: 'Select Computer',
-                    fieldtype: 'Link',
-                    options: 'Computer',
-                    reqd: 1
-                }
-            ],
-            (values) => {
-                let computer = values.computer_link;
-                let device = frm.doc.name;
+// frappe.ui.form.on('Device', {
+//     refresh: function(frm) {
+//         frm.add_custom_button('Attach to Computer', () => {
+//             frappe.prompt([
+//                 {
+//                     fieldname: 'computer_link',
+//                     label: 'Select Computer',
+//                     fieldtype: 'Link',
+//                     options: 'Computer',
+//                     reqd: 1
+//                 }
+//             ],
+//             (values) => {
+//                 let computer = values.computer_link;
+//                 let device = frm.doc.name;
 
-                frappe.call({
-                    method: "it_oprema.it_oprema.api.attach_device",
-                    args: {
-                        computer_link: computer,
-                        device_link: device
-                    },
-                    callback: function(r) {
-                        if (r.message && r.message.warning) {
-                            frappe.confirm(
-                                r.message.warning,
-                                () => {
-                                    // Retry with force=True
-                                    frappe.call({
-                                        method: "it_oprema.it_oprema.api.attach_device",
-                                        args: {
-                                            computer_link: computer,
-                                            device_link: device,
-                                            force: true
-                                        },
-                                        callback: function() {
-                                            frappe.msgprint(`Device ${device} attached to Computer ${computer}`);
-                                            frm.reload_doc();
-                                        }
-                                    });
-                                }
-                            );
-                        } else if (r.message && r.message.ok) {
-                            frappe.msgprint(r.message.message);
-                            frm.reload_doc();
-                        }
-                    }
-                });
-            });
-        });
-    }
-});
+//                 frappe.call({
+//                     method: "it_oprema.it_oprema.api.attach_device",
+//                     args: {
+//                         computer_link: computer,
+//                         device_link: device
+//                     },
+//                     callback: function(r) {
+//                         if (r.message && r.message.warning) {
+//                             frappe.confirm(
+//                                 r.message.warning,
+//                                 () => {
+//                                     // Retry with force=True
+//                                     frappe.call({
+//                                         method: "it_oprema.it_oprema.api.attach_device",
+//                                         args: {
+//                                             computer_link: computer,
+//                                             device_link: device,
+//                                             force: true
+//                                         },
+//                                         callback: function() {
+//                                             frappe.msgprint(`Device ${device} attached to Computer ${computer}`);
+//                                             frm.reload_doc();
+//                                         }
+//                                     });
+//                                 }
+//                             );
+//                         } else if (r.message && r.message.ok) {
+//                             frappe.msgprint(r.message.message);
+//                             frm.reload_doc();
+//                         }
+//                     }
+//                 });
+//             });
+//         });
+//     }
+// });
  //ip address linking
 
 // frappe.ui.form.on('Device', {

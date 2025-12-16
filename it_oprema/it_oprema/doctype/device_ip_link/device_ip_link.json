@@ -42,7 +42,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-15 09:31:46.107054",
+ "modified": "2025-12-16 08:47:35.653857",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Device IP Link",
@@ -65,5 +65,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
