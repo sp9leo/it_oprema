@@ -9,21 +9,23 @@
  "field_order": [
   "device_inventory_code",
   "is_computer",
+  "computer_link",
+  "ip_link",
+  "attached_ips_html",
   "column_break_ibxw",
   "device_id",
   "column_break_ypaf",
   "status",
-  "device_location",
+  "location",
   "company",
   "section_break_mord",
   "device_name",
-  "link_yzwv",
-  "data_jgfm",
+  "device_manufacturer",
+  "device_manufacturer_model",
   "column_break_enpj",
-  "device_type",
+  "device_group",
   "device_serial",
   "column_break_laww",
-  "device_group",
   "section_break_ntrf",
   "column_break_hmxm",
   "velikost",
@@ -40,30 +42,25 @@
   "column_break_hdtj",
   "device_admin",
   "device_user",
+  "tab_5_tab",
+  "movements_html",
   "tab_2_tab",
   "attach_qsif",
   "column_break_wuik",
   "tab_3_tab",
   "html_bzhf",
   "tab_4_tab",
-  "computer_link",
-  "detach"
+  "detach",
+  "bookings_tab",
+  "bookings_html"
  ],
  "fields": [
   {
    "fieldname": "device_name",
    "fieldtype": "Data",
-   "label": "Ime"
-  },
-  {
-   "fieldname": "device_location",
-   "fieldtype": "Link",
-   "in_filter": 1,
    "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Lokacija",
-   "options": "Location",
-   "search_index": 1
+   "in_preview": 1,
+   "label": "Ime"
   },
   {
    "fieldname": "device_admin",
@@ -82,11 +79,6 @@
    "fieldtype": "Link",
    "label": "Skupina",
    "options": "Device Group"
-  },
-  {
-   "fieldname": "device_type",
-   "fieldtype": "Select",
-   "label": "Tip"
   },
   {
    "fieldname": "device_serial",
@@ -213,19 +205,6 @@
    "label": "USB"
   },
   {
-   "fieldname": "link_yzwv",
-   "fieldtype": "Link",
-   "label": "Proizvajalec",
-   "options": "IT-Device Manufacturer"
-  },
-  {
-   "fetch_from": "link_yzwv.manufacturer_part_no",
-   "fieldname": "data_jgfm",
-   "fieldtype": "Data",
-   "label": "Model/oznaka proizvajalca",
-   "read_only": 1
-  },
-  {
    "collapsible": 1,
    "collapsible_depends_on": "eval: doc.device_group == \"Monitor\"",
    "fieldname": "section_break_ntrf",
@@ -285,21 +264,77 @@
    "fieldname": "html_bzhf",
    "fieldtype": "HTML",
    "options": "<figure class=\"figure\"><img src=\"{{doc.qr_code}}\" alt=\"\" class=\"img-fluid\"> <figcaption class=\"figure-caption text-center\">{{doc.device_id}}</figcaption></figure>"
+  },
+  {
+   "fieldname": "tab_5_tab",
+   "fieldtype": "Tab Break",
+   "label": "Movements"
+  },
+  {
+   "fieldname": "movements_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "bookings_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "bookings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Bookings"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lokacija",
+   "options": "Location",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "device_manufacturer",
+   "fieldtype": "Link",
+   "label": "Proizvajalec",
+   "options": "IT-Device Manufacturer"
+  },
+  {
+   "fetch_from": "link_yzwv.manufacturer_part_no",
+   "fieldname": "device_manufacturer_model",
+   "fieldtype": "Data",
+   "label": "Model/oznaka proizvajalca",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attached_ips_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "ip_link",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Attached to Computer Copy",
+   "options": "Device IP Link",
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [
   {
-   "link_doctype": "Premik sredstev",
+   "link_doctype": "Asset Movement",
    "link_fieldname": "asset"
   },
   {
-   "link_doctype": "Computer",
-   "link_fieldname": "device",
-   "table_fieldname": "devices"
+   "link_doctype": "Asset Booking",
+   "link_fieldname": "booking_asset"
   }
  ],
- "modified": "2024-05-30 14:43:38.601121",
+ "modified": "2025-12-15 08:49:23.752356",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Device",
@@ -319,6 +354,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "search_fields": "device_name, device_id, computer_link",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

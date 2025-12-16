@@ -1,0 +1,69 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-15 08:18:05.414614",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "device_link",
+  "ip_address_link",
+  "attached_on",
+  "notes",
+  "ip_address"
+ ],
+ "fields": [
+  {
+   "fieldname": "ip_address_link",
+   "fieldtype": "Link",
+   "options": "IP Address",
+   "unique": 1
+  },
+  {
+   "fieldname": "attached_on",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "device_link",
+   "fieldtype": "Link",
+   "options": "Device"
+  },
+  {
+   "fetch_from": "ip_address_link.ip_address",
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "ip",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-15 09:31:46.107054",
+ "modified_by": "Administrator",
+ "module": "IT_Oprema",
+ "name": "Device IP Link",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

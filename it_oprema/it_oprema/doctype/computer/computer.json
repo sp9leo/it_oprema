@@ -9,34 +9,33 @@
  "engine": "InnoDB",
  "field_order": [
   "device_link",
+  "column_break_fhhn",
+  "device_info_html",
+  "section_break_dmvh",
+  "attached_devices_html",
+  "section_break_yecv",
+  "column_break_arue",
+  "computer_name",
+  "manufacturer",
+  "computer_serial",
   "column_break_ibxw",
   "computer_inventory_code",
   "computer_id",
   "column_break_ypaf",
   "status",
-  "device_location",
-  "section_break_mord",
-  "computer_name",
-  "manufacturer",
-  "computer_serial",
-  "column_break_enpj",
-  "computer_type",
-  "section_break_bvyj",
-  "column_break_ehtk",
-  "barcode_computer",
+  "location",
   "column_break_hdtj",
   "computer_admin",
   "device_user",
+  "column_break_ijns",
+  "barcode_computer",
   "tab_2_tab",
   "attach_qsif",
   "column_break_wuik",
   "naprave",
   "dynamic_link_fxeo",
   "tab_3_tab",
-  "tab_4_tab",
-  "priklopljene_naprave_section",
-  "devices_table",
-  "devices"
+  "tab_4_tab"
  ],
  "fields": [
   {
@@ -49,22 +48,9 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_mord",
-   "fieldtype": "Section Break",
-   "label": "Podatki o napravi",
-   "read_only_depends_on": "device_link != \"\""
-  },
-  {
-   "fieldname": "column_break_enpj",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_bvyj",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "column_break_hdtj",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "read_only": 1
   },
   {
    "fieldname": "tab_2_tab",
@@ -123,48 +109,24 @@
    "label": "Ime"
   },
   {
-   "fetch_from": "device_link.device_type",
-   "fieldname": "computer_type",
-   "fieldtype": "Data",
-   "label": "Tip"
-  },
-  {
    "fetch_from": "device_link.device_serial",
    "fieldname": "computer_serial",
    "fieldtype": "Data",
    "label": "Serijska \u0161t."
   },
   {
+   "fetch_from": "device_link.device_admin",
    "fieldname": "computer_admin",
    "fieldtype": "Link",
    "label": "Skrbnik",
    "options": "User"
   },
   {
-   "fieldname": "column_break_ehtk",
-   "fieldtype": "Column Break"
-  },
-  {
+   "fetch_from": "device_link.koda",
    "fieldname": "barcode_computer",
    "fieldtype": "Barcode",
-   "label": "Barcode"
-  },
-  {
-   "fieldname": "priklopljene_naprave_section",
-   "fieldtype": "Section Break",
-   "label": "Priklopljene naprave"
-  },
-  {
-   "fieldname": "devices_table",
-   "fieldtype": "Table",
-   "in_filter": 1,
-   "in_standard_filter": 1,
-   "options": "Computer device item"
-  },
-  {
-   "fieldname": "devices",
-   "fieldtype": "Link",
-   "options": "Computer device item"
+   "label": "Barcode",
+   "read_only": 1
   },
   {
    "fetch_from": "device_link.status",
@@ -183,21 +145,11 @@
    "options": "IT-Device Manufacturer"
   },
   {
+   "fetch_from": "device_link.device_user",
    "fieldname": "device_user",
    "fieldtype": "Link",
    "label": "Uporabnik",
    "options": "User"
-  },
-  {
-   "fetch_from": "device_link.device_location",
-   "fieldname": "device_location",
-   "fieldtype": "Link",
-   "in_filter": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Lokacija",
-   "options": "Location",
-   "search_index": 1
   },
   {
    "fieldname": "device_link",
@@ -215,17 +167,57 @@
    "fieldname": "dynamic_link_fxeo",
    "fieldtype": "Dynamic Link",
    "options": "naprave"
+  },
+  {
+   "fieldname": "column_break_arue",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ijns",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "true",
+   "fieldname": "section_break_yecv",
+   "fieldtype": "Section Break",
+   "is_virtual": 1,
+   "label": "Device info"
+  },
+  {
+   "fieldname": "attached_devices_html",
+   "fieldtype": "HTML",
+   "label": "Attached devices"
+  },
+  {
+   "fetch_from": "device_link.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lokacija",
+   "options": "Location",
+   "search_index": 1
+  },
+  {
+   "fieldname": "device_info_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "column_break_fhhn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_dmvh",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [
   {
-   "group": "Povezave",
-   "link_doctype": "Pc_Konfiguracija",
-   "link_fieldname": "pckonfig_name"
-  },
-  {
-   "link_doctype": "Premik sredstev",
+   "link_doctype": "Asset Movement",
    "link_fieldname": "asset"
   },
   {
@@ -233,7 +225,7 @@
    "link_fieldname": "computer_link"
   }
  ],
- "modified": "2024-06-24 10:53:51.865161",
+ "modified": "2025-12-15 08:08:32.622182",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Computer",
@@ -265,6 +257,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "search_fields": "computer_inventory_code, computer_name",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [

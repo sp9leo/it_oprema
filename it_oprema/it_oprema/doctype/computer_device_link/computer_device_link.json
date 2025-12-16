@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-22 10:08:07.945562",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "device_link",
+  "computer_link",
+  "status",
+  "attached_on",
+  "detached_on",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "device_link",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Device",
+   "options": "Device",
+   "unique": 1
+  },
+  {
+   "fieldname": "computer_link",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Computer",
+   "options": "Computer"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select"
+  },
+  {
+   "fieldname": "attached_on",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "detached_on",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-15 07:41:32.712068",
+ "modified_by": "Administrator",
+ "module": "IT_Oprema",
+ "name": "Computer Device Link",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "computer_link",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

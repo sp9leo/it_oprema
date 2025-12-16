@@ -5,6 +5,12 @@ app_description = "it oprema app osaz"
 app_email = "osaz@osaz.si"
 app_license = "mit"
 
+
+# doctype_js = {
+#     "Device": "public/device.js"
+# }
+
+
 # Apps
 # ------------------
 

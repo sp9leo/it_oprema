@@ -153,10 +153,10 @@
  "links": [
   {
    "link_doctype": "Device",
-   "link_fieldname": "device_location"
+   "link_fieldname": "location"
   }
  ],
- "modified": "2024-05-30 13:02:58.790974",
+ "modified": "2025-12-12 12:04:03.961414",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Location",
@@ -236,6 +236,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "show_title_field_in_link": 1,
  "sort_field": "modified",

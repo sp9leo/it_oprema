@@ -42,8 +42,6 @@
   "friday",
   "saturday",
   "sunday",
-  "participants",
-  "dogodek_participants",
   "section_break_8",
   "description"
  ],
@@ -257,18 +255,6 @@
    "width": "300px"
   },
   {
-   "fieldname": "participants",
-   "fieldtype": "Section Break",
-   "label": "Participants",
-   "oldfieldtype": "Section Break"
-  },
-  {
-   "fieldname": "dogodek_participants",
-   "fieldtype": "Table",
-   "label": "Event Participants",
-   "options": "Computer device item"
-  },
-  {
    "fieldname": "column_break_pfqi",
    "fieldtype": "Column Break"
   },
@@ -293,7 +279,7 @@
  "icon": "fa fa-calendar",
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2024-06-26 09:14:58.731737",
+ "modified": "2025-12-12 07:51:21.411703",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "Izposoja",
@@ -325,6 +311,7 @@
   }
  ],
  "read_only": 1,
+ "row_format": "Dynamic",
  "sender_field": "sender",
  "sort_field": "modified",
  "sort_order": "DESC",

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestLinkcomputerdevice(FrappeTestCase):
+class TestComputerDeviceLink(FrappeTestCase):
 	pass

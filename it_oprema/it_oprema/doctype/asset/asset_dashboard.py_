@@ -1,0 +1,12 @@
+from frappe import _
+
+def get_data():
+    return {
+        'fieldname': 'asset',   # Link field in Asset Movement pointing to Asset
+        'transactions': [
+            {
+                'label': _('Movements'),
+                'items': ['Asset Movement']
+            }
+        ]
+    }
