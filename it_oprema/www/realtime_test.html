@@ -1,0 +1,37 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<h2>Realtime Test</h2>
+
+<button id="send" class="btn btn-primary">Send Event</button>
+
+<div id="log" style="margin-top:20px; padding:10px; background:#eee;">
+    <strong>Log:</strong>
+    <div id="messages"></div>
+</div>
+
+<script>
+function log(msg) {
+    document.getElementById("messages").innerHTML += "<div>" + msg + "</div>";
+}
+
+frappe.ready(() => {
+
+    // Listen for realtime event
+    frappe.realtime.on("test_event", data => {
+        log("🔥 Received: " + JSON.stringify(data));
+    });
+
+    // Button triggers server-side publish
+    document.getElementById("send").addEventListener("click", () => {
+        frappe.call({
+            method: "it_oprema.www.realtime_test.trigger",
+            callback() {
+                log("📤 Sent request to server");
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

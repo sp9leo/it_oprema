@@ -1,0 +1,112 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="container py-5">
+
+    <h3 class="mb-4 font-weight-bold">Rezervacija termina</h3>
+<div id="slot-warning" class="alert alert-warning" style="display:none;">
+    Nekdo trenutno izpolnjuje ta obrazec.
+</div>
+
+    <!-- SLOT INFO -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-1">{{ item.item_name }}</h5>
+
+            <p class="text-muted mb-0">
+                <i class="far fa-clock mr-2 text-primary"></i>
+                {{ frappe.utils.format_datetime(slot.from_datetime, "dd.MM HH:mm") }}
+                –
+                {{ frappe.utils.format_datetime(slot.to_datetime, "dd.MM HH:mm") }}
+            </p>
+        </div>
+    </div>
+
+    <!-- RESERVATION FORM -->
+    <form id="reservation-form">
+
+        <input type="hidden" name="slot" value="{{ slot.name }}">
+
+        <div class="form-group">
+            <label class="font-weight-bold">Ime in priimek</label>
+            <input type="text" name="customer_name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="font-weight-bold">E‑pošta</label>
+            <input type="email" name="customer_email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="font-weight-bold">Opombe</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-block mt-3">
+            <i class="fas fa-check mr-2"></i>Potrdi rezervacijo
+        </button>
+    </form>
+
+    <!-- SUCCESS MESSAGE -->
+    <div id="success" class="alert alert-success mt-4" style="display:none;">
+        <i class="fas fa-check-circle mr-2"></i>
+        Rezervacija uspešno oddana!
+    </div>
+
+</div>
+
+<script>
+document.getElementById("reservation-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = new FormData(this);
+
+    frappe.call({
+        method: "it_oprema.www.reservation_form.create_reservation",
+        args: Object.fromEntries(data),
+        callback(r) {
+            document.getElementById("success").style.display = "block";
+        }
+    });
+});
+
+
+frappe.ready(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const slot = urlParams.get("slot");
+
+    // Announce presence via server
+    frappe.call({
+        method: "it_oprema.www.reservation_form.announce_open",
+        args: { slot }
+    });
+
+    // Listen for others opening the same slot
+    frappe.realtime.on("slot_opened", data => {
+        if (data.slot === slot) {
+            showWarningBanner();
+        }
+        console.log("🔥 Slot opened event received:", data);
+    });
+
+    // Listen for others closing the same slot
+    frappe.realtime.on("slot_closed", data => {
+        if (data.slot === slot) {
+            hideWarningBanner();
+        }
+    });
+
+    // Announce leaving
+    window.addEventListener("beforeunload", () => {
+        frappe.call({
+            method: "it_oprema.www.reservation_form.announce_close",
+            args: { slot }
+        });
+    });
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .select-card {
+        cursor: pointer;
+        transition: 0.2s;
+        border: 2px solid transparent;
+    }
+    .select-card:hover {
+        transform: translateY(-3px);
+        border-color: #007bff;
+    }
+    .select-card.selected {
+        border-color: #007bff;
+        background: #f0f8ff;
+    }
+</style>
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+        <h2 class="font-weight-bold">Rezervacije</h2>
+        <p class="text-muted">Izberite osebo ali sredstvo in rezervirajte prost termin</p>
+    </div>
+
+    <!-- STEP 1: SELECT PERSON/ASSET -->
+    <div id="step-1">
+        <h4 class="mb-4">1. Izberite osebo ali sredstvo</h4>
+
+        <div class="row">
+            {% for i in items %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm select-card" data-item="{{ i.name }}">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
+                        <h5 class="font-weight-bold">{{ i.item_name }}</h5>
+                        <h6 class="font-weight-bold">{{ i.item_type }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- STEP 2: SELECT SLOT -->
+    <div id="step-2" style="display:none;">
+        <h4 class="mb-4">2. Izberite prost termin</h4>
+
+        <div id="loading" class="text-center my-5" style="display:none;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="text-muted mt-2">Nalaganje...</p>
+        </div>
+
+        <div id="slots-list"></div>
+
+        <button class="btn btn-secondary mt-4" onclick="goBack()">Nazaj</button>
+    </div>
+
+</div>
+
+<script>
+let selectedItem = null;
+
+// STEP 1 — SELECT CARD
+document.querySelectorAll(".select-card").forEach(card => {
+    card.addEventListener("click", function() {
+        document.querySelectorAll(".select-card").forEach(c => c.classList.remove("selected"));
+        this.classList.add("selected");
+
+        selectedItem = this.dataset.item;
+        loadSlots();
+    });
+});
+
+// LOAD SLOTS
+function loadSlots() {
+    document.getElementById("step-1").style.display = "none";
+    document.getElementById("step-2").style.display = "block";
+
+    const list = document.getElementById("slots-list");
+    const loading = document.getElementById("loading");
+
+    list.innerHTML = "";
+    loading.style.display = "block";
+
+    frappe.call({
+        method: "it_oprema.www.booking.get_free_slots",
+        args: { item: selectedItem },
+        callback(r) {
+            loading.style.display = "none";
+
+            const slots = r.message;
+
+            if (!slots.length) {
+                list.innerHTML = `
+                    <div class="alert alert-warning">
+                        Trenutno ni prostih terminov.
+                    </div>`;
+                return;
+            }
+
+            slots.forEach(s => {
+                const from = frappe.datetime.str_to_user(s.from_datetime);
+                const to = frappe.datetime.str_to_user(s.to_datetime);
+
+                const card = `
+                    <div class="card shadow-sm mb-3 border-0">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="font-weight-bold text-dark">${from} – ${to}</div>
+                            </div>
+                            <a href="/reservation_form?slot=${s.name}" class="btn btn-primary">Rezerviraj</a>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += card;
+            });
+        }
+    });
+}
+
+// 🔴 REALTIME LISTENER — ONLY THIS ONE
+// //frappe.ready(() => {
+//     frappe.realtime.on("slot_booked", (data) => {
+//         console.log("🔥 Realtime event received:", data);
+
+//         // Only update if this page is showing the same item
+//         if (!calendar || data.reservation_item !== selectedItem) return;
+
+//         const slotId = data.slot;
+
+//         const events = calendar.getEvents();
+//         events.forEach(ev => {
+//             if (ev.extendedProps.slot_id === slotId) {
+//                 ev.remove();
+//             }
+//         });
+//     });
+// //});
+
+
+
+
+// BACK BUTTON
+function goBack() {
+    document.getElementById("step-2").style.display = "none";
+    document.getElementById("step-1").style.display = "block";
+}
+</script>
+
+{% endblock %}

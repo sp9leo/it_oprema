@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-08 11:30:22.364749",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "reservation_item",
+  "customer_name",
+  "customer_email",
+  "slot",
+  "from_time",
+  "to_time",
+  "notes",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "reservation_item",
+   "fieldtype": "Link",
+   "label": "item",
+   "options": "Reservation Item"
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Datetime",
+   "label": "from"
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Datetime",
+   "label": "to"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "options": "Reservation Item"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "status",
+   "options": "Draft\nConfirmed\nCancelled"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "customer",
+   "options": "Reservation Item"
+  },
+  {
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "email"
+  },
+  {
+   "fieldname": "slot",
+   "fieldtype": "Link",
+   "label": "slot",
+   "options": "Available Slot"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-08 13:34:09.744273",
+ "modified_by": "Administrator",
+ "module": "Reservations",
+ "name": "Reservation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,150 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .select-card {
+        cursor: pointer;
+        transition: 0.2s;
+        border: 2px solid transparent;
+    }
+    .select-card:hover {
+        transform: translateY(-3px);
+        border-color: #007bff;
+    }
+    .select-card.selected {
+        border-color: #007bff;
+        background: #f0f8ff;
+    }
+</style>
+
+<div class="container py-5">
+
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+        <h2 class="font-weight-bold">Rezervacije</h2>
+        <p class="text-muted">Izberite osebo ali sredstvo in rezervirajte prost termin</p>
+    </div>
+
+    <!-- STEP 1: SELECT PERSON/ASSET -->
+    <div id="step-1">
+        <h4 class="mb-4">1. Izberite osebo ali sredstvo</h4>
+
+        <div class="row">
+            {% for i in items %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm select-card" data-item="{{ i.name }}">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
+                        <h5 class="font-weight-bold">{{ i.item_name }}</h5>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- STEP 2: CALENDAR VIEW -->
+    <div id="step-2" style="display:none;">
+        <h4 class="mb-4">2. Izberite termin v koledarju</h4>
+
+        <div id="calendar"></div>
+
+        <button class="btn btn-secondary mt-4" onclick="goBack()">Nazaj</button>
+    </div>
+
+</div>
+
+<!-- FullCalendar CSS + JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+
+let selectedItem = null;
+let calendar = null;
+
+// STEP 1 — SELECT CARD
+document.querySelectorAll(".select-card").forEach(card => {
+    card.addEventListener("click", function() {
+        document.querySelectorAll(".select-card").forEach(c => c.classList.remove("selected"));
+        this.classList.add("selected");
+
+        selectedItem = this.dataset.item;
+        loadSlots();
+    });
+});
+
+// LOAD SLOTS INTO CALENDAR
+function loadSlots() {
+    document.getElementById("step-1").style.display = "none";
+    document.getElementById("step-2").style.display = "block";
+
+    const calendarEl = document.getElementById("calendar");
+    calendarEl.innerHTML = "";
+
+    frappe.call({
+        method: "it_oprema.www.booking.get_free_slots",
+        args: { item: selectedItem },
+        callback(r) {
+            const slots = r.message;
+
+            const events = slots.map(s => ({
+                title: "Prost termin",
+                start: s.from_datetime,
+                end: s.to_datetime,
+                slot_id: s.name,
+                backgroundColor: "#007bff",
+                borderColor: "#007bff"
+            }));
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: "timeGridWeek",
+                locale: "sl",
+                allDaySlot: false,
+                slotMinTime: "06:00:00",
+                slotMaxTime: "22:00:00",
+                height: "auto",
+                events: events,
+
+                eventClick(info) {
+                    const slot = info.event.extendedProps.slot_id;
+                    window.location.href = `/reservation_form?slot=${slot}`;
+                }
+            });
+
+            calendar.render();
+        }
+    });
+}
+
+// 🔴 REALTIME LISTENER — ONLY THIS ONE
+frappe.ready(() => {
+    frappe.realtime.on("slot_booked", (data) => {
+        console.log("🔥 Realtime event received:", data);
+
+        // Only update if this page is showing the same item
+        if (!calendar || data.reservation_item !== selectedItem) return;
+
+        const slotId = data.slot;
+
+        const events = calendar.getEvents();
+        events.forEach(ev => {
+            if (ev.extendedProps.slot_id === slotId) {
+                ev.remove();
+            }
+        });
+    });
+});
+
+// BACK BUTTON
+function goBack() {
+    document.getElementById("step-2").style.display = "none";
+    document.getElementById("step-1").style.display = "block";
+}
+
+</script>
+
+{% endblock %}
