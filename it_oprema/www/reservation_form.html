@@ -3,110 +3,204 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+<style>
+    :root {
+        --primary-color: #007bff;
+        --dark-blue: #022457;
+    }
+
+    /* Consistent container width */
+    .form-container {
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    /* Slot Info Styling */
+    .slot-info-card {
+        border: none;
+        background-color: #f8fbff;
+        border-left: 4px solid var(--primary-color);
+        border-radius: 8px;
+    }
+
+    .slot-info-card h5 {
+        color: var(--dark-blue);
+        font-weight: 700;
+    }
+
+    /* Form Styling */
+    .form-control {
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e5e5e5;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
+    }
+
+    label {
+        font-size: 0.9rem;
+        color: #495057;
+        margin-bottom: 6px;
+    }
+
+    .btn-submit {
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-weight: 600;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+    }
+
+    .btn-back {
+        color: #6c757d;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-back:hover { color: var(--primary-color); }
+
+    /* Warnings and Success */
+    .alert-custom {
+        border-radius: 8px;
+        border: none;
+        font-size: 0.9rem;
+    }
+</style>
+
 <div class="container py-5">
+    <div class="form-container">
+        
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="fas fa-arrow-left mr-2"></i> Nazaj na termine
+        </a>
 
-    <h3 class="mb-4 font-weight-bold">Rezervacija termina</h3>
-<div id="slot-warning" class="alert alert-warning" style="display:none;">
-    Nekdo trenutno izpolnjuje ta obrazec.
-</div>
+        <h3 class="mb-4 font-weight-bold" style="color: var(--dark-blue);">Rezervacija termina</h3>
 
-    <!-- SLOT INFO -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="mb-1">{{ item.item_name }}</h5>
-
-            <p class="text-muted mb-0">
-                <i class="far fa-clock mr-2 text-primary"></i>
-                {{ frappe.utils.format_datetime(slot.start_time, "dd.MM HH:mm") }}
-                –
-                {{ frappe.utils.format_datetime(slot.end_time, "dd.MM HH:mm") }}
-            </p>
+        <div id="slot-warning" class="alert alert-warning alert-custom shadow-sm mb-4" style="display:none;">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            Nekdo trenutno že izpolnjuje ta obrazec.
         </div>
+
+        <div class="card slot-info-card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="mb-1">{{ item.item_name }}</h5>
+                <p class="text-muted mb-0">
+                    <i class="far fa-calendar-alt mr-2 text-primary"></i>
+                    <strong>{{ frappe.utils.format_datetime(slot.start_time, "dd. MM.") }}</strong> | 
+                    {{ frappe.utils.format_datetime(slot.start_time, "HH:mm") }} – {{ frappe.utils.format_datetime(slot.end_time, "HH:mm") }}
+                </p>
+            </div>
+        </div>
+
+        <form id="reservation-form" class="bg-white p-2">
+            <input type="hidden" name="slot" value="{{ slot.name }}">
+
+            <div class="form-group">
+                <label class="font-weight-bold">Ime in priimek</label>
+                <input type="text" name="customer_name" class="form-control" placeholder="Janez Novak" required>
+            </div>
+
+            <div class="form-group">
+                <label class="font-weight-bold">E-pošta</label>
+                <input type="email" name="customer_email" class="form-control" placeholder="janez@primer.si" required>
+            </div>
+
+            <div class="form-group">
+                <label class="font-weight-bold">Opombe <span class="text-muted font-weight-normal">(neobvezno)</span></label>
+                <textarea name="notes" class="form-control" rows="3" placeholder="Dodatne informacije..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-submit mt-4">
+                <i class="fas fa-check mr-2"></i>Potrdi rezervacijo
+            </button>
+        </form>
+
+        <div id="success" class="alert alert-success alert-custom mt-4 shadow-sm text-center" style="display:none; padding: 20px;">
+            <i class="fas fa-check-circle fa-2x mb-2 d-block"></i>
+            <h5 class="mb-1">Rezervacija uspešna!</h5>
+            <p class="mb-0 small text-muted">Potrdilo smo poslali na vaš e-naslov.</p>
+            <a href="/booking" class="btn btn-outline-success btn-sm mt-3">Nazaj na začetek</a>
+        </div>
+
     </div>
-
-    <!-- RESERVATION FORM -->
-    <form id="reservation-form">
-
-        <input type="hidden" name="slot" value="{{ slot.name }}">
-
-        <div class="form-group">
-            <label class="font-weight-bold">Ime in priimek</label>
-            <input type="text" name="customer_name" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label class="font-weight-bold">E‑pošta</label>
-            <input type="email" name="customer_email" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label class="font-weight-bold">Opombe</label>
-            <textarea name="notes" class="form-control" rows="3"></textarea>
-        </div>
-
-        <button class="btn btn-primary btn-block mt-3">
-            <i class="fas fa-check mr-2"></i>Potrdi rezervacijo
-        </button>
-    </form>
-
-    <!-- SUCCESS MESSAGE -->
-    <div id="success" class="alert alert-success mt-4" style="display:none;">
-        <i class="fas fa-check-circle mr-2"></i>
-        Rezervacija uspešno oddana!
-    </div>
-
 </div>
 
 <script>
+// Toggle Visibility Helpers
+function showWarningBanner() { document.getElementById("slot-warning").style.display = "block"; }
+function hideWarningBanner() { document.getElementById("slot-warning").style.display = "none"; }
+
 document.getElementById("reservation-form").addEventListener("submit", function(e) {
     e.preventDefault();
-
     const data = new FormData(this);
+    const btn = this.querySelector('button');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Pošiljanje...';
 
     frappe.call({
         method: "it_oprema.www.reservation_form.create_reservation",
         args: Object.fromEntries(data),
         callback(r) {
-            document.getElementById("success").style.display = "block";
+            if(!r.exc) {
+                document.getElementById("reservation-form").style.display = "none";
+                document.getElementById("success").style.display = "block";
+                document.getElementById("slot-warning").style.display = "none";
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>Potrdi rezervacijo';
+            }
         }
     });
 });
-
 
 frappe.ready(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const slot = urlParams.get("slot");
 
-    // Announce presence via server
-    frappe.call({
-        method: "it_oprema.www.reservation_form.announce_open",
-        args: { slot }
-    });
-
-    // Listen for others opening the same slot
-    frappe.realtime.on("slot_opened", data => {
-        if (data.slot === slot) {
-            showWarningBanner();
-        }
-        console.log("🔥 Slot opened event received:", data);
-    });
-
-    // Listen for others closing the same slot
-    frappe.realtime.on("slot_closed", data => {
-        if (data.slot === slot) {
-            hideWarningBanner();
-        }
-    });
-
-    // Announce leaving
-    window.addEventListener("beforeunload", () => {
+    if (slot) {
+        // Announce presence via server
         frappe.call({
-            method: "it_oprema.www.reservation_form.announce_close",
+            method: "it_oprema.www.reservation_form.announce_open",
             args: { slot }
         });
-    });
-});
 
+        // Listen for others opening the same slot
+        frappe.realtime.on("slot_opened", data => {
+            if (data.slot === slot) {
+                showWarningBanner();
+            }
+        });
+
+        // Listen for others closing the same slot
+        frappe.realtime.on("slot_closed", data => {
+            if (data.slot === slot) {
+                hideWarningBanner();
+            }
+        });
+
+        // Announce leaving
+        window.addEventListener("beforeunload", () => {
+            frappe.call({
+                method: "it_oprema.www.reservation_form.announce_close",
+                args: { slot }
+            });
+        });
+    }
+});
 </script>
 
 {% endblock %}

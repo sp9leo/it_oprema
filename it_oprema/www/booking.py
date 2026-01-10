@@ -2,7 +2,9 @@ import frappe
 from collections import defaultdict
 
 def get_context(context):
-    # Load all active persons
+    # -----------------------------------------
+    # 1. Load all active persons
+    # -----------------------------------------
     items = frappe.get_all(
         "Reservation Item",
         filters={"is_active": 1, "item_type": "Person"},
@@ -22,7 +24,9 @@ def get_context(context):
 
     context.items = items
 
-    # Check if user selected an item
+    # -----------------------------------------
+    # 2. Check if user selected an item
+    # -----------------------------------------
     selected_item = frappe.form_dict.get("item")
     context.selected_item = selected_item
 
@@ -30,17 +34,38 @@ def get_context(context):
         context.slots_by_date = {}
         return
 
-    # Load available slots for selected item
+    # Load Reservation Item doc (for step 2 header)
+    context.item_doc = frappe.get_doc("Reservation Item", selected_item)
+
+    # -----------------------------------------
+    # 3. Load available slots for selected item
+    # -----------------------------------------
     slots = frappe.get_all(
         "Available Slot",
         filters={"reservation_item": selected_item, "is_full": 0},
-        fields=["name", "start_time", "end_time", "capacity", "booked_count"],
+        fields=[
+            "name",
+            "start_time",
+            "end_time",
+            "capacity",
+            "booked_count",
+            "reservation_item"
+        ],
         order_by="start_time asc"
     )
+    for s in slots: 
+        item_doc = frappe.get_doc("Reservation Item", s.reservation_item) 
+        s.item_name = item_doc.item_name
+    context.selected_item = frappe.get_doc("Reservation Item", selected_item)
 
-    # Group slots by date
+
+    # -----------------------------------------
+    # 4. Group slots by date (using start_time)
+    # -----------------------------------------
     grouped = defaultdict(list)
+
     for s in slots:
-        grouped[s.start_time.date()].append(s)
+        date_key = s.start_time.date()
+        grouped[date_key].append(s)
 
     context.slots_by_date = dict(grouped)

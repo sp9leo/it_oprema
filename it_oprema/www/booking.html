@@ -4,45 +4,108 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
+    :root {
+        --primary-color: #007bff;
+        --dark-blue: #022457;
+    }
+
+    /* Selection Cards */
     .select-card {
         cursor: pointer;
-        transition: 0.2s;
-        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        height: 100%;
     }
+
     .select-card:hover {
-        transform: translateY(-3px);
-        border-color: #007bff;
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
-    .select-card.selected {
-        border-color: #007bff;
-        background: #f0f8ff;
+
+    /* Slot Cards */
+    .slot-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers the stack horizontally */
     }
+    .slot-card {
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        text-decoration: none !important;
+        background: #fff;
+    }
+
+    .slot-card:hover {
+        transform: scale(1.02);
+        border-color: var(--primary-color);
+        background-color: #f8fbff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .slot-date-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark-blue);
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .slot-date-title::after {
+        content: "";
+        flex: 1;
+        margin-left: 15px;
+        height: 1px;
+        background: #eee;
+    }
+
+    .badge-capacity {
+        background: #e9ecef;
+        color: #495057;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 20px;
+    }
+
+    .btn-back {
+        color: #6c757d;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-back:hover { color: var(--primary-color); }
 </style>
 
 <div class="container py-5">
 
-    <!-- HEADER -->
     <div class="text-center mb-5">
-        <h2 class="font-weight-bold">Rezervacije</h2>
-        <p class="text-muted">Izberite osebo ali sredstvo in rezervirajte prost termin</p>
+        <h1 class="display-5 font-weight-bold" style="color: var(--dark-blue);">Rezervacije</h1>
+        <p class="lead text-muted">Hitra in enostavna rezervacija terminov</p>
     </div>
 
-    <!-- STEP 1: SELECT PERSON/ASSET -->
     {% if not selected_item %}
     <div id="step-1">
-        <h4 class="mb-4">1. Izberite osebo ali sredstvo</h4>
-
+        <h4 class="mb-4 text-secondary"><i class="fas fa-search mr-2"></i>1. Izberite osebo ali sredstvo</h4>
         <div class="row">
             {% for i in items %}
-                 <div class="col-md-4 mb-4">
-                <a href="/booking?item={{ i.name }}" class="text-decoration-none">
+            <div class="col-md-4 col-lg-3 mb-4">
+                <a href="/booking?item={{ i.name }}" class="text-decoration-none text-dark">
                     <div class="card shadow-sm select-card">
-                        <div class="card-body text-center">
-                            <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
-                            <h5 class="font-weight-bold">{{ i.item_name }}</h5>
-                            <h6 class="font-weight-bold">{{ i.item_type }}</h6>
-                            <p class="text-muted mt-2"> {{ i.slot_count }} prostih terminov </p>
-
+                        <div class="card-body text-center py-4">
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-4x text-primary opacity-75"></i>
+                            </div>
+                            <h5 class="font-weight-bold mb-1">{{ i.item_name }}</h5>
+                            <span class="badge badge-light mb-3">{{ i.item_type }}</span>
+                            <p class="small text-muted mb-0">
+                                <i class="far fa-calendar-check mr-1"></i> {{ i.slot_count }} prostih terminov
+                            </p>
                         </div>
                     </div>
                 </a>
@@ -52,46 +115,57 @@
     </div>
     {% endif %}
 
-    <!-- STEP 2: SELECT SLOT -->
     {% if selected_item %}
-        {% if slots_by_date %}
-        
+    
+    <nav aria-label="breadcrumb">
+        <a href="/booking" class="btn-back">
+            <i class="fas fa-arrow-left mr-2"></i> Nazaj na seznam
+        </a>
+    </nav>
 
-            {% for date, slots in slots_by_date.items() %}
-    <h5 class="mt-4 mb-3 text-primary font-weight-bold">
-        {{ frappe.utils.formatdate(date, "dd. mm. yyyy") }}
-        <span class="text-muted">({{ slots|length }} terminov)</span>
-    </h5>
+    <div class="d-flex align-items-center mb-4">
+        <h3 class="mb-0">Termini za: <span class="text-primary">{{ item_doc.item_name }}</span></h3>
+    </div>
 
+    {% if slots_by_date %}
+        {% for date, slots in slots_by_date.items() %}
+        <div class="slot-date-title">
+            {{ frappe.utils.formatdate(date, "EEEE, dd. MMMM yyyy") }}
+        </div>
 
-                {% for s in slots %}
-                {% set remains = s.capacity-s.booked_count %}
-                   <div class="card shadow-sm mb-3 border-0">
+        <div class="slot-container">
+            {% for s in slots %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <a href="/reservation_form?slot={{ s.name }}" class="card slot-card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="font-weight-bold text-dark">
-                                {{ frappe.utils.format_datetime(s.start_time, "HH:mm") }}
-                                –
-                                {{ frappe.utils.format_datetime(s.end_time, "HH:mm") }}
+                            <div class="font-weight-bold text-dark mb-1" style="font-size: 1.1rem;">
+                                {{ frappe.utils.format_datetime(s.start_time, "HH:mm") }} – {{ frappe.utils.format_datetime(s.end_time, "HH:mm") }}
                             </div>
-                            {%if s.capacity>1%}
-                            <div>
-                               Prosto {{remains}} od {{s.capacity}}
+                            {% if s.capacity > 1 %}
+                            <div class="badge-capacity">
+                                <i class="fas fa-users mr-1"></i> Prosto {{ s.capacity - s.booked_count }} od {{ s.capacity }}
                             </div>
-                            {%endif%}
+                            {% endif %}
                         </div>
-                        <a href="/reservation_form?slot={{ s.name }}" class="btn btn-primary">Rezerviraj</a>
+                        <div class="text-primary font-weight-bold small">
+                            Rezerviraj <i class="fas fa-chevron-right ml-1"></i>
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
-            {% endfor %}
-        {% else %}
-            <div class="alert alert-warning">
-                Trenutno ni prostih terminov.
+                </a>
             </div>
-        {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
 
-        <a href="/booking" class="btn btn-secondary mt-4">Nazaj</a>
+    {% else %}
+    <div class="text-center py-5 border rounded bg-light">
+        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Trenutno ni prostih terminov za to izbiro.</h5>
+        <a href="/booking" class="btn btn-primary mt-3">Izberi drugo možnost</a>
+    </div>
+    {% endif %}
+
     {% endif %}
 
 </div>
