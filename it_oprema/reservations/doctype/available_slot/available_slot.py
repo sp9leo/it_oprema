@@ -13,12 +13,12 @@ class AvailableSlot(Document):
 	def check_overlap(self):
 		overlaps = frappe.db.sql("""
 			SELECT name FROM `tabAvailable Slot`
-			WHERE reservation_item_link=%s
+			WHERE reservation_item=%s
 			AND name!=%s
 			AND (
-				(from_datetime <= %s AND to_datetime >= %s)
+				(start_time <= %s AND end_time >= %s)
 			)
-		""", (self.reservation_item_link, self.name or "", self.to_datetime, self.from_datetime))
+		""", (self.reservation_item, self.name or "", self.end_time, self.start_time))
 
 		if overlaps:
 			frappe.throw("This slot overlaps with an existing one.")
@@ -27,6 +27,6 @@ class AvailableSlot(Document):
 def get_free_slots(item):
     return frappe.get_all(
         "Available Slot",
-        filters={"reservation_item_link": item, "is_booked": 0},
-        fields=["name", "from_datetime", "to_datetime"]
+        filters={"reservation_item": item, "is_booked": 0},
+        fields=["name", "start_time", "end_time"]
     )

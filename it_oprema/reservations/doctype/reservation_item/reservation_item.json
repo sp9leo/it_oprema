@@ -25,7 +25,8 @@
   {
    "default": "0",
    "fieldname": "is_active",
-   "fieldtype": "Check"
+   "fieldtype": "Check",
+   "label": "is Active"
   },
   {
    "fieldname": "owner_user",
@@ -37,7 +38,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-09 11:42:38.446576",
+ "modified": "2026-01-10 14:20:46.094306",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Reservation Item",
@@ -58,6 +59,7 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

@@ -1,0 +1,41 @@
+{
+ "app": "it_oprema",
+ "charts": [],
+ "content": "[{\"id\":\"CZ5SZu3PBY\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">reservations</span>\",\"col\":12}},{\"id\":\"ZS7hdE0oxT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reservation\",\"col\":3}}]",
+ "creation": "2026-01-10 12:13:37.465697",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "grid",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "reservations",
+ "link_type": "DocType",
+ "links": [],
+ "modified": "2026-01-10 12:20:32.804050",
+ "modified_by": "Administrator",
+ "module": "IT_Oprema",
+ "name": "reservations",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 28.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Reservation",
+   "link_to": "Reservation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "reservations",
+ "type": "Workspace"
+}

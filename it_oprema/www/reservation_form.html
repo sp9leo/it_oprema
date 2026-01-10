@@ -17,9 +17,9 @@
 
             <p class="text-muted mb-0">
                 <i class="far fa-clock mr-2 text-primary"></i>
-                {{ frappe.utils.format_datetime(slot.from_datetime, "dd.MM HH:mm") }}
+                {{ frappe.utils.format_datetime(slot.start_time, "dd.MM HH:mm") }}
                 –
-                {{ frappe.utils.format_datetime(slot.to_datetime, "dd.MM HH:mm") }}
+                {{ frappe.utils.format_datetime(slot.end_time, "dd.MM HH:mm") }}
             </p>
         </div>
     </div>

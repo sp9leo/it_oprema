@@ -5,18 +5,16 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "reservation_item_link",
-  "from_datetime",
-  "to_datetime",
-  "is_booked"
+  "slot_date",
+  "reservation_item",
+  "start_time",
+  "end_time",
+  "is_booked",
+  "capacity",
+  "booked_count",
+  "is_full"
  ],
  "fields": [
-  {
-   "fieldname": "reservation_item_link",
-   "fieldtype": "Link",
-   "label": "item",
-   "options": "Reservation Item"
-  },
   {
    "default": "0",
    "fieldname": "is_booked",
@@ -24,20 +22,51 @@
    "label": "is booked"
   },
   {
-   "fieldname": "from_datetime",
-   "fieldtype": "Datetime",
-   "label": "from"
+   "fieldname": "capacity",
+   "fieldtype": "Int",
+   "label": "Capacity"
   },
   {
-   "fieldname": "to_datetime",
+   "fieldname": "booked_count",
+   "fieldtype": "Int",
+   "label": "Booked by"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_full",
+   "fieldtype": "Check",
+   "label": "Is Full"
+  },
+  {
+   "fieldname": "slot_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "start_time",
    "fieldtype": "Datetime",
-   "label": "to"
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "reservation_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Reservation Item"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "To"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-08 14:15:51.934714",
+ "modified": "2026-01-10 14:25:36.160261",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Available Slot",
@@ -60,5 +89,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
