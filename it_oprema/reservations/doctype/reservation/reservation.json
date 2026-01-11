@@ -12,12 +12,15 @@
   "from_time",
   "to_time",
   "notes",
-  "status"
+  "status",
+  "access_token",
+  "token_expiry"
  ],
  "fields": [
   {
    "fieldname": "reservation_item",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "item",
    "options": "Reservation Item"
   },
@@ -45,6 +48,7 @@
   {
    "fieldname": "customer_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "customer",
    "options": "Reservation Item"
   },
@@ -56,14 +60,24 @@
   {
    "fieldname": "slot",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "slot",
    "options": "Available Slot"
+  },
+  {
+   "fieldname": "access_token",
+   "fieldtype": "Data",
+   "unique": 1
+  },
+  {
+   "fieldname": "token_expiry",
+   "fieldtype": "Datetime"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-08 13:34:09.744273",
+ "modified": "2026-01-11 13:16:05.241751",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Reservation",

@@ -7,8 +7,8 @@ def get_context(context):
     # -----------------------------------------
     items = frappe.get_all(
         "Reservation Item",
-        filters={"is_active": 1, "item_type": "Person"},
-        fields=["name", "item_name", "item_type"],
+        filters={"is_active": 1, "item_type": "Person", "class":["!=", ""]},
+        fields=["name", "item_name", "item_type", "class"],
         order_by="item_name asc"
     )
 

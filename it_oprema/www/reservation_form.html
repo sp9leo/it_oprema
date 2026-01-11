@@ -167,40 +167,6 @@ document.getElementById("reservation-form").addEventListener("submit", function(
     });
 });
 
-frappe.ready(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const slot = urlParams.get("slot");
-
-    if (slot) {
-        // Announce presence via server
-        frappe.call({
-            method: "it_oprema.www.reservation_form.announce_open",
-            args: { slot }
-        });
-
-        // Listen for others opening the same slot
-        frappe.realtime.on("slot_opened", data => {
-            if (data.slot === slot) {
-                showWarningBanner();
-            }
-        });
-
-        // Listen for others closing the same slot
-        frappe.realtime.on("slot_closed", data => {
-            if (data.slot === slot) {
-                hideWarningBanner();
-            }
-        });
-
-        // Announce leaving
-        window.addEventListener("beforeunload", () => {
-            frappe.call({
-                method: "it_oprema.www.reservation_form.announce_close",
-                args: { slot }
-            });
-        });
-    }
-});
 </script>
 
 {% endblock %}

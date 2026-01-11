@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2026-01-08 11:29:22.982945",
  "doctype": "DocType",
@@ -7,6 +8,7 @@
  "field_order": [
   "item_name",
   "item_type",
+  "class",
   "owner_user",
   "is_active"
  ],
@@ -26,6 +28,7 @@
    "default": "0",
    "fieldname": "is_active",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "is Active"
   },
   {
@@ -33,12 +36,21 @@
    "fieldtype": "Link",
    "label": "owner",
    "options": "User"
+  },
+  {
+   "description": "T1-1. triada, T2-2.triada, T3-3.triada, Ostalo",
+   "fieldname": "class",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "class",
+   "options": "\nT1\nT2\nT3\nOstalo",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-10 14:20:46.094306",
+ "modified": "2026-01-11 10:50:54.710538",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Reservation Item",

@@ -21,15 +21,17 @@
     .select-card:hover {
         transform: translateY(-5px);
         border-color: var(--primary-color);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
     }
 
     /* Slot Cards */
     .slot-container {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centers the stack horizontally */
+        align-items: center;
+        /* Centers the stack horizontally */
     }
+
     .slot-card {
         border: 1px solid #e5e5e5;
         border-radius: 10px;
@@ -42,7 +44,7 @@
         transform: scale(1.02);
         border-color: var(--primary-color);
         background-color: #f8fbff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .slot-date-title {
@@ -79,7 +81,40 @@
         margin-bottom: 1.5rem;
     }
 
-    .btn-back:hover { color: var(--primary-color); }
+    .btn-back:hover {
+        color: var(--primary-color);
+    }
+
+
+
+
+    .cursor-pointer {
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .cursor-pointer:hover {
+        background-color: #e9ecef !important;
+    }
+
+    .hover-list-item {
+        transition: transform 0.1s;
+        border: 1px solid transparent !important;
+    }
+
+    .hover-list-item:hover {
+        border-color: #007bff !important;
+        background-color: #f8f9fa;
+    }
+
+    /* Rotate arrow when collapsed */
+    .collapsed .transition-icon {
+        transform: rotate(-90deg);
+    }
+
+    .transition-icon {
+        transition: transform 0.3s;
+    }
 </style>
 
 <div class="container py-5">
@@ -90,6 +125,99 @@
     </div>
 
     {% if not selected_item %}
+    <div id="step-1">
+        <div class="mb-4">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-white border-right-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                </div>
+                <input type="text" id="cardSearch" class="form-control border-left-0" placeholder="Išči po imenu">
+            </div>
+        </div>
+
+        {# Get unique classes and handle potential None values #}
+        {% set unique_classes = items|map(attribute='class')|map('default', 'Ostalo')|unique|sort %}
+
+        {% for current_group in unique_classes %}
+        {# Define unique ID for this group #}
+        {% set group_id = "group_" ~ loop.index %}
+
+        {# Calculate how many items are in this group manually #}
+        {% set group_count = items|selectattr('class', 'equalto', current_group if current_group != 'Ostalo' else None)|list|length %}
+        {# If the above 'selectattr' is too complex for your environment, use: #}
+        {# {% set group_count = items|selectattr('class', 'defined')|list|length %} #}
+
+        <div class="category-section mb-3">
+            <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded cursor-pointer"
+                data-toggle="collapse" data-target="#{{ group_id }}" style="cursor: pointer;">
+                <h6 class="mb-0 font-weight-bold text-dark text-uppercase">
+                    {{ current_group }}
+                    <span class="badge badge-secondary ml-2 count-badge">
+                        {# We'll update this count in JS if searching, but here is the initial #}
+                        {{ items|selectattr('class', 'equalto', current_group)|list|length if current_group != 'Ostalo' else items|selectattr('class', 'none')|list|length }}
+                    </span>
+                </h6>
+                <i class="fas fa-chevron-down text-muted transition-icon"></i>
+            </div>
+
+            <div id="{{ group_id }}" class="collapse collapsed mt-2">
+                <div class="row px-2">
+                    {% for i in items %}
+                    {% set item_class = i.class if i.class else 'Ostalo' %}
+
+                    {% if item_class == current_group %}
+                    <div class="col-md-2 col-lg-2 p-1 searchable-card" data-name="{{ i.item_name|lower }}">
+                        <a href="/booking?item={{ i.name }}" class="text-decoration-none text-dark">
+                            <div class="card shadow-sm border-0 hover-list-item">
+                                <div class="card-body d-flex align-items-center p-2">
+                                    <i class="fas fa-user-circle fa-2x text-primary mr-3 opacity-75"></i>
+                                    <div class="text-truncate">
+                                        <strong
+                                            class="d-block text-truncate">
+                                            <!-- {% set name_parts = i.item_name.split(' ') %}
+                                            {% if name_parts|length > 2 %}
+                                            {{ name_parts[0] }} {{ name_parts[1][0] }}. {{ name_parts[2][0] }}.
+                                            {%elif name_parts|length > 1 %}
+                                            {{ name_parts[0] }} {{ name_parts[1][0] }}.
+                                            {% else %}
+                                            {{ i.item_name }}
+                                            {% endif %} -->
+                                        {{ i.item_name }}</strong>
+                                        <small class="text-muted badge"><i class="far fa-calendar-check mr-1"></i> {{ i.slot_count }} prostih terminov</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- <div class="row mx-n1"> {% for i in items %}
+    <div class="col-6 col-md-4 col-lg-3 col-xl-2 p-1">
+        <a href="/booking?item={{ i.name }}" class="text-decoration-none text-dark">
+            <div class="card shadow-sm text-center h-100 py-2">
+                <div class="card-body p-2">
+                    <i class="fas fa-user-circle fa-2x text-primary mb-2"></i>
+                    <p class="font-weight-bold small mb-0 text-truncate">{{ i.item_name }}</p>
+                    <p class="small text-muted mb-0">
+                                <i class="far fa-calendar-check mr-1"></i> {{ i.slot_count }} prostih terminov
+                            </p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div> -->
+
+    <!-- ORIGINAL -->
+    <!-- {% if not selected_item %}
     <div id="step-1">
         <h4 class="mb-4 text-secondary"><i class="fas fa-search mr-2"></i>1. Izberite osebo ali sredstvo</h4>
         <div class="row">
@@ -113,10 +241,10 @@
             {% endfor %}
         </div>
     </div>
-    {% endif %}
+    {% endif %} -->
 
     {% if selected_item %}
-    
+
     <nav aria-label="breadcrumb">
         <a href="/booking" class="btn-back">
             <i class="fas fa-arrow-left mr-2"></i> Nazaj na seznam
@@ -128,35 +256,37 @@
     </div>
 
     {% if slots_by_date %}
-        {% for date, slots in slots_by_date.items() %}
-        <div class="slot-date-title">
-            {{ frappe.utils.formatdate(date, "EEEE, dd. MMMM yyyy") }}
-        </div>
+    {% for date, slots in slots_by_date.items() %}
+    <div class="slot-date-title">
+        {{ frappe.utils.formatdate(date, "EEEE, dd. MMMM yyyy") }}
+    </div>
 
-        <div class="slot-container">
-            {% for s in slots %}
-            <div class="col-md-6 col-lg-4 mb-3">
-                <a href="/reservation_form?slot={{ s.name }}" class="card slot-card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="font-weight-bold text-dark mb-1" style="font-size: 1.1rem;">
-                                {{ frappe.utils.format_datetime(s.start_time, "HH:mm") }} – {{ frappe.utils.format_datetime(s.end_time, "HH:mm") }}
-                            </div>
-                            {% if s.capacity > 1 %}
-                            <div class="badge-capacity">
-                                <i class="fas fa-users mr-1"></i> Prosto {{ s.capacity - s.booked_count }} od {{ s.capacity }}
-                            </div>
-                            {% endif %}
+    <div class="slot-container">
+        {% for s in slots %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <a href="/reservation_form?slot={{ s.name }}" class="card slot-card">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="font-weight-bold text-dark mb-1" style="font-size: 1.1rem;">
+                            {{ frappe.utils.format_datetime(s.start_time, "HH:mm") }} –
+                            {{ frappe.utils.format_datetime(s.end_time, "HH:mm") }}
                         </div>
-                        <div class="text-primary font-weight-bold small">
-                            Rezerviraj <i class="fas fa-chevron-right ml-1"></i>
+                        {% if s.capacity > 1 %}
+                        <div class="badge-capacity">
+                            <i class="fas fa-users mr-1"></i> Prosto {{ s.capacity - s.booked_count }} od
+                            {{ s.capacity }}
                         </div>
+                        {% endif %}
                     </div>
-                </a>
-            </div>
-            {% endfor %}
+                    <div class="text-primary font-weight-bold small">
+                        Rezerviraj <i class="fas fa-chevron-right ml-1"></i>
+                    </div>
+                </div>
+            </a>
         </div>
         {% endfor %}
+    </div>
+    {% endfor %}
 
     {% else %}
     <div class="text-center py-5 border rounded bg-light">
