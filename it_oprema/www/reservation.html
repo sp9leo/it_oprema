@@ -1,0 +1,103 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+{% if invalid %}
+<h2>{{ message }}</h2>
+
+{% else %}
+
+<h2>Your Reservation</h2>
+{{ access_token }}
+<p><strong>Name:</strong> {{ reservation.customer_name }}</p>
+<p><strong>Email:</strong> {{ reservation.customer_email }}</p>
+<p><strong>Slot:</strong> {{ slot.from_datetime }} → {{ slot.to_datetime }}</p>
+<p><strong>Status:</strong> {{ reservation.status }}</p>
+
+<button id="cancel-btn" class="btn btn-danger">Cancel Reservation</button>
+<button id="reschedule-btn" class="btn btn-secondary">Reschedule</button>
+
+<!-- Shared Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelModalLabel">Cancel Reservation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message">Are you sure you want to cancel this reservation?</p>
+
+        <div class="form-group">
+          <label for="cancellation-reason">Reason for cancellation (optional)</label>
+          <textarea id="cancellation-reason" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keep Reservation</button>
+        <button type="button" class="btn btn-danger" id="confirm-cancel-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    let isReschedule = false;
+
+    // CANCEL BUTTON → open modal
+    document.getElementById("cancel-btn")?.addEventListener("click", () => {
+        isReschedule = false;
+        document.getElementById("modal-message").innerText =
+            "Are you sure you want to cancel this reservation?";
+        document.getElementById("cancelModalLabel").innerText =
+            "Cancel Reservation";
+        $('#cancelModal').modal('show');
+    });
+
+    // RESCHEDULE BUTTON → open same modal
+    document.getElementById("reschedule-btn")?.addEventListener("click", () => {
+        isReschedule = true;
+        document.getElementById("modal-message").innerText =
+            "Rescheduling will cancel your current reservation. Continue?";
+        document.getElementById("cancelModalLabel").innerText =
+            "Reschedule Reservation";
+        $('#cancelModal').modal('show');
+    });
+
+    // CONFIRM BUTTON → cancel reservation (and redirect if rescheduling)
+    document.getElementById("confirm-cancel-btn")?.addEventListener("click", () => {
+        const reason = document.getElementById("cancellation-reason").value || "";
+
+        frappe.call({
+            method: "it_oprema.www.reservation.cancel_reservation",
+            args: {
+                token: "{{ access_token }}",
+                reason: reason
+            },
+            callback(r) {
+                $('#cancelModal').modal('hide');
+
+                frappe.show_alert({
+                    message: r.message.message,
+                    indicator: r.message.ok ? "green" : "red"
+                });
+
+                setTimeout(() => {
+                    if (isReschedule) {
+                        window.location.href = "/booking";
+                    } else {
+                        location.reload();
+                    }
+                }, 1200);
+            }
+        });
+    });
+
+});
+</script>
+
+{% endif %}
+{% endblock %}

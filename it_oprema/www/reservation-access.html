@@ -10,3 +10,32 @@
 #TODO - omogoči samo cancel brez edit. - preveri script in logiko
 {%endblock%}
 
+{% if invalid %}
+<h2>Invalid or expired reservation link</h2>
+{% else %}
+
+<h2>Your Reservation</h2>
+
+<p><strong>Name:</strong> {{ reservation.customer_name }}</p>
+<p><strong>Email:</strong> {{ reservation.customer_email }}</p>
+<p><strong>Slot:</strong> {{ slot.from_datetime }} → {{ slot.to_datetime }}</p>
+<p><strong>Status:</strong> {{ reservation.status }}</p>
+
+{% if reservation.status != "Cancelled" %}
+<button id="cancel-btn">Cancel Reservation</button>
+{% endif %}
+
+<script>
+document.getElementById("cancel-btn")?.addEventListener("click", () => {
+    frappe.call({
+        method: "yourapp.www.reservation.[token].cancel_reservation",
+        args: { token: "{{ token }}" },
+        callback(r) {
+            alert(r.message);
+            location.reload();
+        }
+    });
+});
+</script>
+
+{% endif %}

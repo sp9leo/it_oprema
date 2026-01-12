@@ -69,3 +69,6 @@ def get_context(context):
         grouped[date_key].append(s)
 
     context.slots_by_date = dict(grouped)
+
+
+
