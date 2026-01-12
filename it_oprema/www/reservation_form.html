@@ -9,13 +9,8 @@
         --dark-blue: #022457;
     }
 
-    /* Consistent container width */
-    .form-container {
-        max-width: 450px;
-        margin: 0 auto;
-    }
+    .form-container { max-width: 450px; margin: 0 auto; }
 
-    /* Slot Info Styling */
     .slot-info-card {
         border: none;
         background-color: #f8fbff;
@@ -23,12 +18,8 @@
         border-radius: 8px;
     }
 
-    .slot-info-card h5 {
-        color: var(--dark-blue);
-        font-weight: 700;
-    }
+    .slot-info-card h5 { color: var(--dark-blue); font-weight: 700; }
 
-    /* Form Styling */
     .form-control {
         border-radius: 8px;
         padding: 12px;
@@ -41,11 +32,7 @@
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
     }
 
-    label {
-        font-size: 0.9rem;
-        color: #495057;
-        margin-bottom: 6px;
-    }
+    label { font-size: 0.9rem; color: #495057; margin-bottom: 6px; }
 
     .btn-submit {
         background-color: var(--primary-color);
@@ -56,10 +43,7 @@
         transition: transform 0.2s, background-color 0.2s;
     }
 
-    .btn-submit:hover {
-        background-color: #0056b3;
-        transform: translateY(-1px);
-    }
+    .btn-submit:hover { background-color: #0056b3; transform: translateY(-1px); }
 
     .btn-back {
         color: #6c757d;
@@ -72,7 +56,6 @@
 
     .btn-back:hover { color: var(--primary-color); }
 
-    /* Warnings and Success */
     .alert-custom {
         border-radius: 8px;
         border: none;
@@ -105,6 +88,7 @@
             </div>
         </div>
 
+        <!-- FORM -->
         <form id="reservation-form" class="bg-white p-2">
             <input type="hidden" name="slot" value="{{ slot.name }}">
 
@@ -128,10 +112,14 @@
             </button>
         </form>
 
+        <!-- SUCCESS BLOCK (hidden initially) -->
         <div id="success" class="alert alert-success alert-custom mt-4 shadow-sm text-center" style="display:none; padding: 20px;">
             <i class="fas fa-check-circle fa-2x mb-2 d-block"></i>
             <h5 class="mb-1">Rezervacija uspešna!</h5>
-            <p class="mb-0 small text-muted">Potrdilo smo poslali na vaš e-naslov.</p>
+
+            <div id="reservation-details" class="mt-3"></div>
+
+            <p class="mb-0 small text-muted mt-3">Potrdilo smo poslali na vaš e-naslov.</p>
             <a href="/booking" class="btn btn-outline-success btn-sm mt-3">Nazaj na začetek</a>
         </div>
 
@@ -139,10 +127,6 @@
 </div>
 
 <script>
-// Toggle Visibility Helpers
-function showWarningBanner() { document.getElementById("slot-warning").style.display = "block"; }
-function hideWarningBanner() { document.getElementById("slot-warning").style.display = "none"; }
-
 document.getElementById("reservation-form").addEventListener("submit", function(e) {
     e.preventDefault();
     const data = new FormData(this);
@@ -155,10 +139,42 @@ document.getElementById("reservation-form").addEventListener("submit", function(
         method: "it_oprema.www.reservation_form.create_reservation",
         args: Object.fromEntries(data),
         callback(r) {
-            if(!r.exc) {
-                document.getElementById("reservation-form").style.display = "none";
-                document.getElementById("success").style.display = "block";
-                document.getElementById("slot-warning").style.display = "none";
+            if (!r.exc) {
+                const reservation_id = r.message;
+
+                // Fetch reservation details
+                frappe.call({
+                    method: "frappe.client.get",
+                    args: {
+                        doctype: "Reservation",
+                        name: reservation_id
+                    },
+                    callback(res) {
+                        const d = res.message;
+
+                        // Build details block
+                        document.getElementById("reservation-details").innerHTML = `
+                            <p class="mb-1"><strong>ID rezervacije:</strong> 
+                <a href="/reservation?token=${d.access_token}" class="text-success font-weight-bold">
+                    ${d.name}
+                </a>
+            </p>
+                            <p class="mb-1"><strong>Ime:</strong> ${d.customer_name}</p>
+                            <p class="mb-1"><strong>Email:</strong> ${d.customer_email}</p>
+                            <p class="mb-1"><strong>Termin:</strong> {{ frappe.utils.format_datetime(slot.start_time, "dd. MM. yyyy HH:mm") }}</p>
+
+                            <div class="mt-3">
+                                <img src="/api/method/frappe.utils.qr_code.generate_qr_code?data=${d.name}" 
+                                     alt="QR Code" style="max-width:150px;">
+                            </div>
+                        `;
+
+                        // Show success block
+                        document.getElementById("reservation-form").style.display = "none";
+                        document.getElementById("success").style.display = "block";
+                    }
+                });
+
             } else {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-check mr-2"></i>Potrdi rezervacijo';
@@ -166,7 +182,6 @@ document.getElementById("reservation-form").addEventListener("submit", function(
         }
     });
 });
-
 </script>
 
 {% endblock %}

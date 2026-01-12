@@ -1,25 +1,38 @@
 import frappe
 
 def get_context(context):
-    slot = frappe.form_dict.slot
+    # If reservation_id is in URL, load reservation for display
+    reservation_id = frappe.form_dict.get("reservation_id")
+    if reservation_id:
+        context.reservation = frappe.get_doc("Reservation", reservation_id)
+        context.slot = frappe.get_doc("Available Slot", context.reservation.slot)
+        return context
+
+    # Otherwise load slot for the form
+    slot = frappe.form_dict.get("slot")
     if not slot:
         frappe.throw("Missing slot parameter")
 
-    slot_doc = frappe.get_doc("Available Slot", slot)
+    context.slot = frappe.get_doc("Available Slot", slot)
+    context.item = frappe.get_doc("Reservation Item", context.slot.reservation_item)
+    return context
 
-    context.slot = slot_doc
-    context.item = frappe.get_doc("Reservation Item", slot_doc.reservation_item)
 
 
 @frappe.whitelist(allow_guest=True)
 def create_reservation(slot, customer_name, customer_email, notes=None):
-    slot_doc = frappe.get_doc("Available Slot", slot)
 
-    # 1. VALIDATION
+    # Lock slot row to prevent double booking
+    slot_doc = frappe.get_doc("Available Slot", slot, for_update=True)
+
+    # Validate
     if slot_doc.is_full:
         frappe.throw("Ta termin je že polno zaseden.")
 
-    # 2. CREATE RESERVATION (Desk logic will update slot)
+    if not customer_name or not customer_email:
+        frappe.throw("Customer name and email are required.")
+
+    # Create reservation
     res = frappe.get_doc({
         "doctype": "Reservation",
         "slot": slot,
@@ -31,8 +44,9 @@ def create_reservation(slot, customer_name, customer_email, notes=None):
     })
 
     res.insert(ignore_permissions=True)
+    res.submit()
 
-    # 3. REALTIME EVENT
+    # Realtime event
     frappe.publish_realtime(
         event="slot_booked",
         message={

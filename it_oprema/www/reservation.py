@@ -10,11 +10,15 @@ def get_context(context):
         return context
 
     reservation = frappe.db.get_value(
-        "Reservation",
-        {"access_token": token},
-        ["name", "customer_name", "customer_email", "slot", "status"],
-        as_dict=True
-    )
+    "Reservation",
+    {
+        "access_token": token,
+        "docstatus": 1   # Only submitted reservations
+    },
+    ["name", "customer_name", "customer_email", "slot", "status"],
+    as_dict=True
+)
+
 
     if not reservation:
         context.invalid = True
