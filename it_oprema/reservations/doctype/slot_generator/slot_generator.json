@@ -10,7 +10,9 @@
   "end_time",
   "slot_duration",
   "capacity",
-  "bookable_persons"
+  "bookable_item",
+  "applies_to",
+  "days_of_week"
  ],
  "fields": [
   {
@@ -39,16 +41,27 @@
    "label": "Capacity"
   },
   {
-   "fieldname": "bookable_persons",
+   "fieldname": "applies_to",
+   "fieldtype": "Select",
+   "label": "Applies to",
+   "options": "Person\nRoom\nAsset"
+  },
+  {
+   "fieldname": "bookable_item",
    "fieldtype": "Table",
    "label": "Bookable persons",
-   "options": "Bookable Persons"
+   "options": "Bookable Items"
+  },
+  {
+   "fieldname": "days_of_week",
+   "fieldtype": "Table",
+   "options": "Slot Days"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-10 13:11:50.021506",
+ "modified": "2026-01-20 20:11:23.832265",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Slot Generator",

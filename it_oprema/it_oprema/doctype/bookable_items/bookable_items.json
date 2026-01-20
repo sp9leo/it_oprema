@@ -24,7 +24,7 @@
  "modified": "2026-01-10 13:16:10.397973",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
- "name": "Bookable Persons",
+ "name": "Bookable Items",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

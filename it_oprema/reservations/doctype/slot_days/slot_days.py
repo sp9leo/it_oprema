@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class BookablePersons(Document):
+class SlotDays(Document):
 	pass

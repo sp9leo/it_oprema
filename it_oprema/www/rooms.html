@@ -1,0 +1,34 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+#TODO - uredi rooms.py
+<div class="container">
+    {{Reservations}}
+    <h1 class="text-2xl font-bold mb-4">Room Reservations</h1>
+
+    <div class="flex items-center gap-4 mb-4">
+        <select id="room-select" class="border p-2 rounded">
+            {% for room in rooms %}
+                <option value="{{ room.name }}">{{ room.item_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button id="prev-week" class="px-3 py-1 border rounded">← Previous</button>
+        <button id="next-week" class="px-3 py-1 border rounded">Next →</button>
+    </div>
+
+    <table id="weekly-table" class="table table-bordered w-full text-center">
+        <thead>
+            <tr>
+                <th>Time</th>
+                {% for day in ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"] %}
+                    <th>{{ day }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody id="weekly-body">
+            <!-- JS will fill this -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+<!-- <script src="/assets/it_oprema/js/rooms.js"></script> -->

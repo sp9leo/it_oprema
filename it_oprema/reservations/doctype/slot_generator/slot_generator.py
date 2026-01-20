@@ -16,7 +16,7 @@ def generate_slots(docname):
 
     duration_minutes = doc.slot_duration
 
-    for row in doc.bookable_persons:
+    for row in doc.bookable_item:
         current = start_dt
 
         while current < end_dt:
