@@ -15,16 +15,20 @@
  "label": "reservations",
  "link_type": "DocType",
  "links": [],
- "modified": "2026-01-10 12:20:32.804050",
+ "modified": "2026-01-21 17:29:20.892959",
  "modified_by": "Administrator",
  "module": "IT_Oprema",
  "name": "reservations",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "",
+ "parent_page": "System",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
  "sequence_id": 28.0,
  "shortcuts": [
   {

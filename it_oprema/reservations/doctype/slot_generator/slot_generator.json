@@ -5,17 +5,20 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "applies_to",
   "date",
+  "schedule",
   "start_time",
   "end_time",
+  "days_of_week",
+  "column_break_ztwi",
   "slot_duration",
   "capacity",
-  "bookable_item",
-  "applies_to",
-  "days_of_week"
+  "bookable_item"
  ],
  "fields": [
   {
+   "depends_on": "eval: doc.applies_to == 'Person'",
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date"
@@ -49,19 +52,31 @@
   {
    "fieldname": "bookable_item",
    "fieldtype": "Table",
-   "label": "Bookable persons",
+   "label": "Bookable items",
    "options": "Bookable Items"
   },
   {
+   "depends_on": "eval: doc.applies_to == 'Room'",
    "fieldname": "days_of_week",
    "fieldtype": "Table",
+   "label": "Days",
    "options": "Slot Days"
+  },
+  {
+   "fieldname": "column_break_ztwi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "schedule",
+   "fieldtype": "Link",
+   "label": "Schedule",
+   "options": "Schedule"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-20 20:11:23.832265",
+ "modified": "2026-01-21 18:12:47.887490",
  "modified_by": "Administrator",
  "module": "Reservations",
  "name": "Slot Generator",
